@@ -1,6 +1,9 @@
-@font-face {font-family: 'spacemono'; src: url("assets/SpaceMono-Regular.woff"); font-weight: normal;}@font-face {font-family: 'spacemono'; src: url("assets/SpaceMono-Bold.woff"); font-weight: bold;}
+@font-face {font-family: 'spacemono'; src: url("assets/SpaceMono-Regular.woff"); font-weight: normal;}
+
+@font-face {font-family: 'spacemono'; src: url("assets/SpaceMono-Bold.woff"); font-weight: bold;}
 
 #stage {
+	color: #111111;
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;

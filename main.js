@@ -20,11 +20,10 @@ function loadAPI(keyword){
 	}).done(function(result) {
 
 	var headline = result.response.docs[chooseArticle].headline.main;
-	 console.log(result);
 	injectString(headline);
 
 	}).fail(function(err) {
-	  throw err;
+	  injectString('Error. the new york times api is currently not available. Please try again later');
 	});
 }
 
@@ -69,20 +68,20 @@ function injectString(sollString){
 		var preparedString = sollString.split(" ").join('ˉ').toUpperCase().replace(/[^\w\s.,]/gi,'ˉ');	
 	} 
 
-	// If preparedString is shorter than cols*rows. add dashes to fill up the grid
-	if (preparedString.length < cols*rows){
+	// // If preparedString is shorter than cols*rows. add dashes to fill up the grid
+	// if (preparedString.length < cols*rows){
 
-		var preparedArray = preparedString.split('');
+	// 	var preparedArray = preparedString.split('');
 
 
 		
-		for (var i = 0; i < cols*rows - preparedString.length; i++){
-			preparedArray.push('ˉ');
-		}
+	// 	for (var i = 0; i < cols*rows - preparedString.length; i++){
+	// 		preparedArray.push('ˉ');
+	// 	}
 
-		var preparedString = preparedArray.join('');
+	// 	var preparedString = preparedArray.join('');
 
-	}
+	// }
 
 	var currentWord = 0;
 	
@@ -122,19 +121,24 @@ function injectString(sollString){
 
 				}
 
+			// If the letter is not the right one yet
 			if (istArray[istIndex] != preparedString[sollIndex]){
 
+				// rotate the letter one more step
+
 				istArray[istIndex] = possibleCharacters[possibleIndex];
+					
+				$( "#stage a:nth-child("+boxid+")" ).html(istArray[istIndex]);	
 
-
-					$( "#stage a:nth-child("+boxid+")" ).html(istArray[istIndex]);
-
-					// Add Link to the <a> element 
+				// Add a title to the element, if it is part of a word
+				if (preparedString[istIndex] != 'ˉ'){	
 					$( "#stage a:nth-child("+boxid+")" ).attr("title", singleWords[currentWord]);
+				}
 
-					// $( document.getElementById(boxid)).html(istArray[istIndex]);
 
 				possibleIndex++;
+
+			// If the letter is the right one
 
 			} else {
 
@@ -149,10 +153,10 @@ function injectString(sollString){
 				}
 			}
 		}
-	
+		
+		// Just in case if i want to log the grid as a string
 		// istString = istArray.join('');
 
-		// console.log(istString);
 	}, 10);		
 }
 
@@ -165,13 +169,34 @@ injectString(sollString);
 
 // Fire the the API-loader, when a word is clicked
 $( "a" ).click(function() {
+	if ($(this).attr('title')){
+		clearInterval(theAnimation);
 
-	clearInterval(theAnimation);
+		$( "#stage a" ).html('ˉ');
 
-	chooseArticle = Math.floor(Math.random() * 10);
-	var keyword = this.title;
-	loadAPI(keyword);
+		chooseArticle = Math.floor(Math.random() * 10);
+		var keyword = this.title;
+		loadAPI(keyword);
+	}
 });
+
+
+
+// mouse hover
+
+$("a").hover(function(){
+	if ($(this).attr('title')){
+		var titleStr = $(this).attr("title");
+		$("a[title=\""+titleStr+"\"]").addClass('active');
+	}
+}, function() {
+ 	if ($(this).attr('title')){
+ 		var titleStr = $(this).attr("title");
+    	$("a[title=\""+titleStr+"\"]").removeClass('active');
+    }
+});
+
+
 
 
 
