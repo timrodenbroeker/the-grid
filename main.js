@@ -7,6 +7,8 @@ var theAnimation;
 // Initialize the variable for the interim states of the grid
 var currentString;
 
+var istArray;
+
 // This is the string i want to inject into the grid, when app is launched
 var sollString = "creative coding is a rising discipline, inspiring and connecting thousands of people worldwide. open source software tools lay the foundation for a new generation of artists and designers, using the internet to exchange, learn, teach, share, exhibit and connect, regardless of ethnicity, nationality, age, religion or gender. creative coding reveals completely new opportunities in many ways. and this is just the beginning of the story.";
 
@@ -37,7 +39,7 @@ function createGrid(){
 
 
 function injectString(sollString){
-
+	
 	var istString = '';
 
 	// Prepare and format the injected string
@@ -53,7 +55,7 @@ function injectString(sollString){
 
 	var word = [];
 
-	var istArray = istString.split('');
+	istArray = istString.split('');
 
 	var countUp = 0;
 
@@ -62,8 +64,6 @@ function injectString(sollString){
 	var istIndex = 0;
 
 	var sollIndex = 0;
-
-
 
 	// Animate the GRID
 
@@ -97,7 +97,6 @@ function injectString(sollString){
 					$( "#stage a:nth-child("+boxid+")" ).attr("title", singleWords[currentWord]);
 				}
 
-
 				possibleIndex++;
 
 			// If the letter is the right one
@@ -129,24 +128,65 @@ function injectString(sollString){
 }
 
 
+
 // Create The Grid
 createGrid();
 
 // Inject The String
 injectString(sollString);
 
+
+function clearGrid(){
+	var counter;
+	clearInterval(theAnimation);
+	$( "#stage a" ).removeClass("active");
+	var clearingAnimation = setInterval(function(){ 
+		for (var i = 0; i < istArray.length+1; i++){
+			
+			if ($( "#stage a:nth-child("+i+")" ).html() != 'ˉ'){
+
+				var randomLetter = possibleCharacters[Math.floor(Math.random() * possibleCharacters.length)];
+
+				$( "#stage a:nth-child("+i+")" ).html(randomLetter);	
+			} 
+		}
+	counter++;
+	}, 10);		
+
+	setTimeout(function() { 
+		clearInterval( clearingAnimation ); 
+		$( "#stage a" ).html('ˉ')
+		$( "#stage a" ).removeAttr("title");
+	}, 500);
+}
+
+
+
 // Fire the the API-loader, when a word is clicked
 $( "a" ).click(function() {
 	if ($(this).attr('title')){
-		clearInterval(theAnimation);
-
-		$( "#stage a" ).html('ˉ');
+		clearGrid();
 
 		chooseArticle = Math.floor(Math.random() * 10);
 		var keyword = this.title;
 		loadAPI(keyword);
 	}
 });
+
+
+// mouse hover
+
+$("a").hover(function(){
+	if ($(this).attr('title')){
+		var titleStr = $(this).attr("title");
+		$("a[title=\""+titleStr+"\"]").addClass('active');
+	}
+}, function() {
+ 	if ($(this).attr('title')){
+    	$("a").removeClass('active');
+    }
+});
+
 
 
 // Load stuff from the New York Times API
@@ -172,20 +212,6 @@ function loadAPI(keyword){
 }
 
 
-
-// mouse hover
-
-$("a").hover(function(){
-	if ($(this).attr('title')){
-		var titleStr = $(this).attr("title");
-		$("a[title=\""+titleStr+"\"]").addClass('active');
-	}
-}, function() {
- 	if ($(this).attr('title')){
- 		var titleStr = $(this).attr("title");
-    	$("a[title=\""+titleStr+"\"]").removeClass('active');
-    }
-});
 
 
 
