@@ -1,9 +1,11 @@
-// THE GRID
-// A TYPOGRAPHIC JAVASCRIPT-ADVENTURE BY TIM RODENBRÖKER
-// www.timrodenbroeker.de
-
+// Global variables
 
 var chooseArticle;
+
+var theAnimation;
+
+
+// Load stuff from the New York Times API
 
 function loadAPI(keyword){
 	// Built by LucyBot. www.lucybot.com
@@ -18,7 +20,7 @@ function loadAPI(keyword){
 	}).done(function(result) {
 
 	var headline = result.response.docs[chooseArticle].headline.main;
-	 
+	 console.log(result);
 	injectString(headline);
 
 	}).fail(function(err) {
@@ -57,24 +59,34 @@ function createGrid(){
 
 }
 
-function injectString(sollString){
 
+function injectString(sollString){
 
 	var istString = '';
 
-	// Format the injected string
+	// Prepare and format the injected string
 	for (var i = 0; i < sollString.length; i++){
-		var sollArray = sollString.split(" ").join('ˉ').toUpperCase().replace(/[^\w\s.,]/gi,'ˉ');	
-	
+		var preparedString = sollString.split(" ").join('ˉ').toUpperCase().replace(/[^\w\s.,]/gi,'ˉ');	
 	} 
+
+	// If preparedString is shorter than cols*rows. add dashes to fill up the grid
+	if (preparedString.length < cols*rows){
+
+		var preparedArray = preparedString.split('');
+
+
+		
+		for (var i = 0; i < cols*rows - preparedString.length; i++){
+			preparedArray.push('ˉ');
+		}
+
+		var preparedString = preparedArray.join('');
+
+	}
 
 	var currentWord = 0;
 	
-	var singleWords = sollArray.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").toLowerCase().split('ˉ');
-
-	// console.log(singleWords[currentWord]);
-
-	// console.log(singleWords);
+	var singleWords = preparedString.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").toLowerCase().split('ˉ');
 
 	// The istArray represents all interim states of the grid
 
@@ -90,15 +102,17 @@ function injectString(sollString){
 
 	var sollIndex = 0;
 
+
+
 	// Animate the GRID
 
-	setInterval(function(){ 
+	theAnimation = setInterval(function(){ 
 
 	var boxid = istIndex+1;
 
 		// Wenn istIndex kleiner ist als die Länge des Soll-Arrays
 
-		if (istIndex < sollArray.length){
+		if (istIndex < preparedString.length){
 
 			// wenn der aktuelle Buchstabe nicht mit dem Soll-Buchstaben übereinstimmt
 
@@ -108,14 +122,12 @@ function injectString(sollString){
 
 				}
 
-			if (istArray[istIndex] != sollArray[sollIndex]){
+			if (istArray[istIndex] != preparedString[sollIndex]){
 
 				istArray[istIndex] = possibleCharacters[possibleIndex];
 
 
 					$( "#stage a:nth-child("+boxid+")" ).html(istArray[istIndex]);
-
-
 
 					// Add Link to the <a> element 
 					$( "#stage a:nth-child("+boxid+")" ).attr("title", singleWords[currentWord]);
@@ -131,7 +143,7 @@ function injectString(sollString){
 			istIndex++;
 			sollIndex++;
 
-				if (sollArray[sollIndex] == 'ˉ'){
+				if (preparedString[sollIndex] == 'ˉ'){
 					currentWord++;
 				// console.log(singleWords[currentWord]);
 				}
@@ -145,34 +157,21 @@ function injectString(sollString){
 }
 
 
-// Creatie The Grid
+// Create The Grid
 createGrid();
 
 // Inject The String
 injectString(sollString);
 
-// Load the API when word is clicked
+// Fire the the API-loader, when a word is clicked
 $( "a" ).click(function() {
+
+	clearInterval(theAnimation);
+
 	chooseArticle = Math.floor(Math.random() * 10);
 	var keyword = this.title;
 	loadAPI(keyword);
 });
-
-
-
-
-// Beautify
-
-// Alle Markierungen entfernen
-function clearSelection() {
-    if(document.selection && document.selection.empty) {
-        document.selection.empty();
-    } else if(window.getSelection) {
-        var sel = window.getSelection();
-        sel.removeAllRanges();
-    }
-}
-
 
 
 
