@@ -1,6 +1,6 @@
-![alt text](https://timrodenbroeker.github.io/the-grid/assets/c.gif "The Grid")
+![alt text](https://timrodenbroeker.github.io/the-grid/assets/c.gif)
 
-# the-grid
-"The Grid" is an experimental, browser-based simulation of a mechanical destination board known from Airports.
+# THE GRID
+THE GRID is an experimental, browser-based simulation of a mechanical destination board known from Airports.
 
 This WebApp is connected to the "New York Times API": Each time a word is clicked, the display begins to print a random headline from the NYT-article-archive, containing that word. This allows an experimental, playful exploration of the contemporary history.
