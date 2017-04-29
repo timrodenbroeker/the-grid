@@ -1,9 +1,13 @@
-@font-face {font-family: 'spacemono'; src: url("assets/SpaceMono-Regular.woff"); font-weight: normal;}
+@font-face {font-family: 'spacemono'; src: url("assets/SpaceMono-Regular.woff"); font-weight: normal}
 
 @font-face {font-family: 'spacemono'; src: url("assets/SpaceMono-Bold.woff"); font-weight: bold;}
 
+body {
+	background: #111111;
+	color: white;
+}
+
 #stage {
-	color: #111111;
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -16,8 +20,8 @@
 	cursor: pointer;
 }
 
-#stage a, #stage a:hover {
-	color: black;
+a,a:hover {
+	color: white;
 	text-decoration: none;
 }
 
