@@ -4,29 +4,6 @@ var chooseArticle;
 
 var theAnimation;
 
-
-// Load stuff from the New York Times API
-
-function loadAPI(keyword){
-	// Built by LucyBot. www.lucybot.com
-	var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-	url += '?' + $.param({
-	  'api-key': "f93f51e506ce414e8c5ef8b9afa5fb6d",
-	  'q': keyword
-	});
-	$.ajax({
-	  url: url,
-	  method: 'GET',
-	}).done(function(result) {
-
-	var headline = result.response.docs[chooseArticle].headline.main;
-	injectString(headline);
-
-	}).fail(function(err) {
-	  injectString('Error. the new york times api is currently not available. Please try again later');
-	});
-}
-
 // Initialize the variable for the interim states of the grid
 var currentString;
 
@@ -67,21 +44,6 @@ function injectString(sollString){
 	for (var i = 0; i < sollString.length; i++){
 		var preparedString = sollString.split(" ").join('ˉ').toUpperCase().replace(/[^\w\s.,]/gi,'ˉ');	
 	} 
-
-	// // If preparedString is shorter than cols*rows. add dashes to fill up the grid
-	// if (preparedString.length < cols*rows){
-
-	// 	var preparedArray = preparedString.split('');
-
-
-		
-	// 	for (var i = 0; i < cols*rows - preparedString.length; i++){
-	// 		preparedArray.push('ˉ');
-	// 	}
-
-	// 	var preparedString = preparedArray.join('');
-
-	// }
 
 	var currentWord = 0;
 	
@@ -152,6 +114,12 @@ function injectString(sollString){
 				// console.log(singleWords[currentWord]);
 				}
 			}
+
+
+			// To Do: Fast Fix: Remove all titles from 'ˉ'
+
+
+
 		}
 		
 		// Just in case if i want to log the grid as a string
@@ -179,6 +147,29 @@ $( "a" ).click(function() {
 		loadAPI(keyword);
 	}
 });
+
+
+// Load stuff from the New York Times API
+
+function loadAPI(keyword){
+	// Built by LucyBot. www.lucybot.com
+	var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+	url += '?' + $.param({
+	  'api-key': "f93f51e506ce414e8c5ef8b9afa5fb6d",
+	  'q': keyword
+	});
+	$.ajax({
+	  url: url,
+	  method: 'GET',
+	}).done(function(result) {
+
+	var headline = result.response.docs[chooseArticle].headline.main;
+	injectString(headline);
+
+	}).fail(function(err) {
+	  injectString('Error. the new york times api is currently not available. Please try again later');
+	});
+}
 
 
 
