@@ -73,7 +73,7 @@ function injectString(sollString){
 			// 2. Replace all special characters
 			// 3. Replace all double dashes
 			// 4. convert to upperacase
-			preparedString = sollString.replace(/\s/g,'ˉ').replace(/[^\w\s.,_-’–]/gi,'ˉ').replace(/ˉ{2,}/g, 'ˉ').toUpperCase();
+			preparedString = sollString.replace('’',' ').replace(/\s/g,'ˉ').replace(/[^\w\s.,_-–]/gi,'ˉ').replace(/ˉ{2,}/g, 'ˉ').toUpperCase();
 		} 
 
 
