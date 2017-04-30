@@ -1,6 +1,14 @@
-@font-face {font-family: 'spacemono'; src: url("assets/SpaceMono-Regular.woff"); font-weight: normal}
+@font-face {
+	font-family: 'space mono'; 
+	src: url("assets/SpaceMono-Regular.woff"); 
+	font-weight: normal;
+}
 
-@font-face {font-family: 'spacemono'; src: url("assets/SpaceMono-Bold.woff"); font-weight: bold;}
+@font-face {
+	font-family: 'space mono'; 
+	src: url("assets/SpaceMono-Bold.woff"); 
+	font-weight: bold;
+}
 
 body {
 	background: #111111;
@@ -8,6 +16,7 @@ body {
 }
 
 #stage {
+	width: 100%;
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -16,7 +25,7 @@ body {
 	font-weight: bold;
 	letter-spacing: 0.3vw;
 	line-height:90%;
-	font-family: 'spacemono',monospace;
+	font-family: 'space mono', monospace;
 	cursor: pointer;
 }
 

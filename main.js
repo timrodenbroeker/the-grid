@@ -1,17 +1,20 @@
 // Global variables
 
-var chooseArticle;
+// NYT Headline
+var headline;
 
+// the animation
 var theAnimation;
 
-// Initialize the variable for the interim states of the grid
+// variable for all interim states of the grid
 var currentString;
 
 var istArray;
 
-// This is the string i want to inject into the grid, when app is launched
+// First string to be injected
 var sollString = "creative coding is a rising discipline, inspiring and connecting thousands of people worldwide. open source software tools lay the foundation for a new generation of artists and designers, using the internet to exchange, learn, teach, share, exhibit and connect, regardless of ethnicity, nationality, age, religion or gender. creative coding reveals completely new opportunities in many ways. and this is just the beginning of the story.";
 
+var preparedString;
 
 // The dimension of the grid
 var cols = 20;
@@ -20,16 +23,13 @@ var rows = 8;
 // These are the characters that are possible to display
 var possibleCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890.,:!ˉ';
 
-// convert string to an array
-var possibleCharactersArray = possibleCharacters.split('');
-
 // Create the HTML-Grid 
 function createGrid(){
 	
 	var index = 0;
 	var colIndex = 0;
 
-	for (var y = 0; y < rows*cols; y++){
+	for (var i = 0; i < rows*cols; i++){
 
 		$("#stage").append('<a>ˉ</a>');
 		index++;
@@ -37,94 +37,104 @@ function createGrid(){
 
 }
 
-
 function injectString(sollString){
-	
-	var istString = '';
-
-	// Prepare and format the injected string
-	for (var i = 0; i < sollString.length; i++){
-		var preparedString = sollString.split(" ").join('ˉ').toUpperCase().replace(/[^\w\s.,]/gi,'ˉ');	
-	} 
 
 	var currentWord = 0;
-	
-	var singleWords = preparedString.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").toLowerCase().split('ˉ');
+
+	// Needed for linking the single words
+	var singleWords;
 
 	// The istArray represents all interim states of the grid
 
 	var word = [];
 
-	istArray = istString.split('');
+	istArray = [];
 
 	var countUp = 0;
 
+
+	// The current index of the possible characters
 	var possibleIndex = 0;
 
-	var istIndex = 0;
 
-	var sollIndex = 0;
+	// The current index of the grid
+	var currentIndex = 0;
 
-	// Animate the GRID
+	// 
+	var targetIndex = 0;
+	
 
-	theAnimation = setInterval(function(){ 
+	function prepareString(){
+		
+		// Prepare and format the injected string
+		for (var i = 0; i < sollString.length; i++){
 
-	var boxid = istIndex+1;
+			// 1. Delete all whitespaces
+			// 2. Replace all special characters
+			// 3. Replace all double dashes
+			// 4. convert to upperacase
+			preparedString = sollString.replace(/\s/g,'ˉ').replace(/[^\w\s.,_-’–]/gi,'ˉ').replace(/ˉ{2,}/g, 'ˉ').toUpperCase();
+		} 
 
-		// Wenn istIndex kleiner ist als die Länge des Soll-Arrays
 
-		if (istIndex < preparedString.length){
+		singleWords = preparedString.replace(/[.,]/g,"").toLowerCase().split('ˉ');
+	}
 
-			// wenn der aktuelle Buchstabe nicht mit dem Soll-Buchstaben übereinstimmt
+	function animateGrid(){
+		
+		// Assign the animation to a variable, so it can be stopped afterwards
+		theAnimation = setInterval(function(){ 
 
-				// Falls das Ende des Grids erreicht ist
-				if (istIndex >= cols*rows){
-					istIndex = 0; 
+		// If the end of the preparedString is not reached
+		if (currentIndex < preparedString.length){
+
+				// If the end of the grid is reached, go back to the first position
+				if (currentIndex >= cols*rows){
+					currentIndex = 0; 
 
 				}
 
 			// If the letter is not the right one yet
-			if (istArray[istIndex] != preparedString[sollIndex]){
+			if (istArray[currentIndex] != preparedString[targetIndex]){
 
 				// rotate the letter one more step
-
-				istArray[istIndex] = possibleCharacters[possibleIndex];
-					
-				$( "#stage a:nth-child("+boxid+")" ).html(istArray[istIndex]);	
-
-				// Add a title to the element, if it is part of a word
-				if (preparedString[istIndex] != 'ˉ'){	
-					$( "#stage a:nth-child("+boxid+")" ).attr("title", singleWords[currentWord]);
-				}
+				istArray[currentIndex] = possibleCharacters[possibleIndex];
+				$( "#stage a:nth-child("+(currentIndex+1)+")" ).html(istArray[currentIndex]);	
 
 				possibleIndex++;
 
-			// If the letter is the right one
+			
 
 			} else {
 
+				// If the letter is the right one
+				// Add a title to the element, if it is part of a word
+				if (preparedString[currentIndex] != 'ˉ' &&
+					preparedString[currentIndex] != '.' &&
+					preparedString[currentIndex] != ',' ){	
+					$( "#stage a:nth-child("+(currentIndex+1)+")" ).attr("title", singleWords[currentWord]);
+				}
+
 			// Go to next letter
 			possibleIndex = 0;
-			istIndex++;
-			sollIndex++;
+			currentIndex++;
+			targetIndex++;
 
-				if (preparedString[sollIndex] == 'ˉ'){
-					currentWord++;
-				// console.log(singleWords[currentWord]);
-				}
+			// If the end of a word is reached
+			if (preparedString[targetIndex] == 'ˉ'){
+				currentWord++;
+			}
+			
 			}
 
-
-			// To Do: Fast Fix: Remove all titles from 'ˉ'
-
-
-
-		}
+			}
 		
-		// Just in case if i want to log the grid as a string
-		// istString = istArray.join('');
+		}, 10);		
+	}
 
-	}, 10);		
+	prepareString();
+	animateGrid();
+
 }
 
 
@@ -137,9 +147,12 @@ injectString(sollString);
 
 
 function clearGrid(){
-	var counter;
+
+	// Clear current animation
 	clearInterval(theAnimation);
-	$( "#stage a" ).removeClass("active");
+
+	$( "#stage a" ).removeClass("active");	
+
 	var clearingAnimation = setInterval(function(){ 
 		for (var i = 0; i < istArray.length+1; i++){
 			
@@ -150,31 +163,30 @@ function clearGrid(){
 				$( "#stage a:nth-child("+i+")" ).html(randomLetter);	
 			} 
 		}
-	counter++;
 	}, 10);		
 
 	setTimeout(function() { 
 		clearInterval( clearingAnimation ); 
-		$( "#stage a" ).html('ˉ')
+		$( "#stage a" ).html('ˉ');
+		$( "#stage a" ).removeClass("active");	
 		$( "#stage a" ).removeAttr("title");
 	}, 500);
 }
 
 
 
-// Fire the the API-loader, when a word is clicked
+// Launch the API-loader, when a word is clicked
 $( "a" ).click(function() {
 	if ($(this).attr('title')){
 		clearGrid();
 
-		chooseArticle = Math.floor(Math.random() * 10);
 		var keyword = this.title;
 		loadAPI(keyword);
 	}
 });
 
 
-// mouse hover
+// blue color on mouse hover
 
 $("a").hover(function(){
 	if ($(this).attr('title')){
@@ -187,11 +199,12 @@ $("a").hover(function(){
     }
 });
 
-
-
 // Load stuff from the New York Times API
 
 function loadAPI(keyword){
+
+	var errorMsg = 'Error. the new york times api is currently not available. Please try again later';
+
 	// Built by LucyBot. www.lucybot.com
 	var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
 	url += '?' + $.param({
@@ -203,11 +216,14 @@ function loadAPI(keyword){
 	  method: 'GET',
 	}).done(function(result) {
 
-	var headline = result.response.docs[chooseArticle].headline.main;
+	headline = result.response.docs[Math.floor(Math.random() * 10)].headline.main;
+	
+	console.log(headline);
+
 	injectString(headline);
 
 	}).fail(function(err) {
-	  injectString('Error. the new york times api is currently not available. Please try again later');
+	  injectString(errorMsg);
 	});
 }
 
