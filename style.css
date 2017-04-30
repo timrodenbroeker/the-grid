@@ -11,8 +11,8 @@
 }
 
 body {
-	background: #222222;
-	color: #dddddd;
+	background: black;
+	color: white;
 }
 
 #stage {
@@ -30,7 +30,7 @@ body {
 }
 
 a,a:hover {
-	color: #dddddd;
+	color: black;
 	text-decoration: none;
 }
 
