@@ -1,4 +1,4 @@
-![alt text](https://timrodenbroeker.github.io/the-grid/assets/c.gif)
+![alt text](https://timrodenbroeker.github.io/the-grid/assets/preview.gif)
 
 # THE GRID
 An experimental, browser-based simulation of a [mechanical destination board](https://www.google.de/search?q=destination+board&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwi_8duF5crTAhWOJFAKHbDRDGIQsAQIJQ&biw=1280&bih=684) as known from Airports.
